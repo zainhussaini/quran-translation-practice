@@ -1,5 +1,4 @@
 import streamlit as st
-import os
 import re
 import json
 
@@ -123,13 +122,14 @@ st.image(ayat_image_url, use_container_width=True)
 
 col1, col2, col3 = st.columns(3)
 with col1:
-  show_arabic_words = st.toggle("show Arabic words")
+  # show_arabic_words = st.toggle("show Arabic words")
+  pass
 with col2:
   def clear_text():
     for key in st.session_state:
       if key.startswith("word"):
         st.session_state[key] = ""
-  st.button("clear input text", on_click=clear_text)
+  st.button("Clear", on_click=clear_text)
 with col3:
   show_answer = st.button("show answer")
 
@@ -138,7 +138,8 @@ arabic_words = get_words_arabic(surah_number, ayat_number)
 for i in range(len(translations)):
   col1, col2, col3 = st.columns(3)
   with col1:
-    if show_arabic_words:
+    # if show_arabic_words:
+    if True:
       st.write("#### " + arabic_words[i])
   with col2:
     key = f"word{i}"
