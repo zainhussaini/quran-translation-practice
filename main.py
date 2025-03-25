@@ -76,7 +76,7 @@ initialize_if_needed("ayat_index", 0)
 
 # WEB PAGE
 
-COLUMN_RATIOS = [1, 3, 3]
+COLUMN_RATIOS = [1, 2, 2]
 
 st.title("Quran Translation Practice")
 
