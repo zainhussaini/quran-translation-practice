@@ -27,6 +27,7 @@ def get_ayat_count(surah_number):
   ayat_count = res[0]
   return ayat_count
 
+@st.cache_data
 def get_arabic_translation_pairs(surah_number, ayat_number):
   con = sqlite3.connect("information.db")
   cur = con.cursor()
