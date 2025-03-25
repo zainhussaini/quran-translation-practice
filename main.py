@@ -82,7 +82,7 @@ st.title("Quran Translation Practice")
 
 col1, col2, col3 = st.columns(COLUMN_RATIOS, vertical_alignment="bottom")
 with col1:
-  if st.button("next ayat"):
+  if st.button("Next ayat"):
     surah_number, ayat_number = get_surah_ayat()
     next_surah_number, next_ayat_number = get_next_surah_ayat(surah_number, ayat_number)
     set_surah_ayat(next_surah_number, next_ayat_number)
@@ -98,7 +98,9 @@ with col3:
 
 surah_number, ayat_number = get_surah_ayat()
 ayat_image_url = get_image_url_of_ayat(surah_number, ayat_number)
-st.image(ayat_image_url, use_container_width=True)
+st.image(ayat_image_url)
+
+st.divider()
 
 col1, col2, col3 = st.columns(COLUMN_RATIOS)
 with col1:
@@ -124,3 +126,10 @@ for i, (arabic, translation) in enumerate(arabic_translation_pairs):
   with col3:
     if show_answer:
       st.write("##### " + translation)
+
+st.divider()
+
+corpus_link = f"https://corpus.quran.com/wordbyword.jsp?chapter={surah_number}&verse={ayat_number}"
+st.link_button("Corpus link", corpus_link)
+
+# TODO: add link to https://lexicon.quranic-research.net/
