@@ -1,0 +1,3 @@
+[submodule "raw_data/data-quran"]
+	path = raw_data/data-quran
+	url = git@github.com:hablullah/data-quran.git

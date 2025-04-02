@@ -1,0 +1,85 @@
+import sqlite3
+
+INFORMATION_DB_PATH = "information.db"
+
+
+# Returns an ordered list of surah names.
+def get_surah_names() -> list[str]:
+    con = sqlite3.connect(INFORMATION_DB_PATH)
+    cur = con.cursor()
+    cur.execute("SELECT surah_name FROM surahs ORDER BY surah_number")
+    res = cur.fetchall()
+    con.close()
+
+    surah_names = [row[0] for row in res]
+    return surah_names
+
+
+# Returns the number of ayat in surah specified by its number.
+def get_ayat_count(surah_number) -> int:
+    con = sqlite3.connect(INFORMATION_DB_PATH)
+    cur = con.cursor()
+    cur.execute("SELECT ayat_count FROM surahs WHERE surah_number = ?",
+                (surah_number, ))
+    res = cur.fetchone()
+    con.close()
+
+    ayat_count = res[0]
+    return ayat_count
+
+
+# Returns the arabic text of an ayat.
+def get_quran_text(surah_number, ayat_number) -> str:
+    con = sqlite3.connect(INFORMATION_DB_PATH)
+    cur = con.cursor()
+    cur.execute(
+        "SELECT ayat_text FROM quran_text WHERE surah_number = ? AND ayat_number = ?",
+        (surah_number, ayat_number))
+    res = cur.fetchone()
+    con.close()
+
+    return res[0]
+
+
+# Returns (arabic, translation) pairs for every word in an ayat.
+def get_arabic_translation_pairs(surah_number,
+                                 ayat_number) -> list[tuple[str, str]]:
+    con = sqlite3.connect(INFORMATION_DB_PATH)
+    cur = con.cursor()
+    cur.execute(
+        "SELECT arabic, translation FROM word_translations WHERE surah_number = ? AND ayat_number = ? ORDER BY word_position",
+        (surah_number, ayat_number))
+    res = cur.fetchall()
+    con.close()
+
+    assert len(res) > 0
+    return res
+
+
+def get_word_morphology(surah_number, ayat_number,
+                        word_number) -> list[tuple[str, str, str]]:
+    con = sqlite3.connect(INFORMATION_DB_PATH)
+    cur = con.cursor()
+    cur.execute(
+        "SELECT form, tag, features FROM morphology WHERE surah_number = ? AND ayat_number = ? AND word_number = ? ORDER BY feature_number",
+        (surah_number, ayat_number, word_number))
+    res = cur.fetchall()
+    con.close()
+
+    assert len(res) > 0
+    return res
+
+
+# Returns link to lanes lexicon page (from lexicon.quranic-research.net).
+def get_lanes_lexicon_link(corpus_root):
+    con = sqlite3.connect(INFORMATION_DB_PATH)
+    cur = con.cursor()
+    cur.execute("SELECT url FROM lanes_lexicon WHERE root = ?", (corpus_root, ))
+    res = cur.fetchone()
+    con.close()
+
+    return res[0]
+
+
+def get_corpus_dictionary_link(corpus_root):
+    return f"https://corpus.quran.com/qurandictionary.jsp?q={corpus_root}"
