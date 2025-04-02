@@ -18,7 +18,7 @@ lZy
 mTw
 mlw
 msw
-nAy -> nAe
+nAy -> nAe (special lane encoding)
 ndw
 nf
 nq

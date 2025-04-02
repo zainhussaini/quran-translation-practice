@@ -23,8 +23,8 @@ class TestSurahNames:
         # [^\(\)]+      -> Matches one or more characters that are NOT parentheses (allows any special characters inside parentheses).
         #  \)           -> Matches a closing parenthesis ")".
         # $             -> Ensures the string ends right after the closing parenthesis.
-
         pattern = r'^\d+\. [^\(\)]+ \([^\(\)]+\)$'
+
         for surah_name in get_surah_names():
             assert re.match(pattern, surah_name)
 
@@ -187,8 +187,8 @@ class TestLanesLexiconLinks:
         link = "https://lexicon.quranic-research.net/data/28_e/035_ye.html"
         assert get_lanes_lexicon_link("ye") == link
 
-    def test_unsolved_special_case(self):
-        assert get_lanes_lexicon_link("dhq") != None
+    def test_invalid_root(self):
+        assert get_lanes_lexicon_link("qqq") is None
 
 
 class TestQuranicCorpusLinks:
@@ -200,6 +200,3 @@ class TestQuranicCorpusLinks:
     def get_corpus_dictionary_link(self):
         link = "https://corpus.quran.com/qurandictionary.jsp?q=ye"
         assert get_lanes_lexicon_link("ye") == link
-
-
-# Add test that there is root from morphology to lanes

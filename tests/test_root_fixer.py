@@ -30,14 +30,19 @@ class TestSpecialCases:
     def test_correction_root(self):
         assert convert_to_lanes_lexicon_root("hAt") == "Ate"
 
+    def test_unsolved_root(self):
+        assert convert_to_lanes_lexicon_root("dhq") is None
+
     def test_all_roots_evaluate(self):
         corpus_roots = get_all_roots_from_corpus()
         lanes_roots = get_all_roots_from_lanes_lexicon()
         special_cases = get_special_cases()
         for root in corpus_roots:
             converted = convert_to_lanes_lexicon_root(root)
-            if converted not in lanes_roots:
-                # make sure it's captured by a special case
+            if converted is not None:
+                assert converted in lanes_roots
+            else:
+                # If a root doesn't evaluate, make sure it is a known special case.
                 assert special_cases[root] is None
 
     def test_all_special_cases_necessary(self):

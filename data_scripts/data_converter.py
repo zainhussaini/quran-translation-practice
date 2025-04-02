@@ -6,7 +6,7 @@ import re
 INFORMATION_DB_PATH = "information.db"
 
 
-# Helper function for writing to table.
+# Helper function for writing to the database.
 def write_to_table(table_name: str, table_columns: list[str],
                    data: list[list]):
     for data_row in data:
@@ -22,14 +22,18 @@ def write_to_table(table_name: str, table_columns: list[str],
     con.commit()
 
 
+# Writes the surahs table.
 def surahs():
-    with open("raw_data/data-quran/surah-translation/en-qurancom.json") as file:
+    table_name = "surahs"
+
+    with open(
+            "raw_data/data-quran/surah-translation/en-qurancom.json") as file:
         surah_translation_json = json.load(file)
 
     with open("raw_data/data-quran/surah/surah.json") as file:
         surah_json = json.load(file)
 
-    # maps from surah_number to surah_name
+    # Maps from surah_number to surah_name.
     surah_name_dict = dict()
     for position, information in surah_translation_json.items():
         name = information["name"]
@@ -40,7 +44,7 @@ def surahs():
 
         surah_name_dict[surah_number] = surah_name
 
-    # maps from surah_number to ayat_count
+    # Maps from surah_number to ayat_count.
     ayat_count_dict = dict()
     for position, information in surah_json.items():
         surah_number = int(position)
@@ -48,16 +52,18 @@ def surahs():
 
         ayat_count_dict[surah_number] = ayat_count
 
-    # surah_number, surah_name, ayat_count
     data = []
     for i in range(1, 115):
         data.append((i, surah_name_dict[i], ayat_count_dict[i]))
 
-    write_to_table("surahs", ["surah_number", "surah_name", "ayat_count"],
+    write_to_table(table_name, ["surah_number", "surah_name", "ayat_count"],
                    data)
 
 
+# Writes the word_translations table.
 def word_translations():
+    table_name = "word_translations"
+
     with open("raw_data/data-quran/word/word.json") as file:
         word_json = json.load(file)
 
@@ -67,7 +73,6 @@ def word_translations():
     with open("raw_data/data-quran/word-text/uthmani-quranwbw.json") as file:
         word_text_json = json.load(file)
 
-    # surah_number, ayat_number, word_position, arabic, translation
     data = []
     for word_index, information in word_json.items():
         surah_number = information["surah"]
@@ -78,20 +83,22 @@ def word_translations():
         data.append(
             (surah_number, ayat_number, word_position, arabic, translation))
 
-    write_to_table("word_translations", [
+    write_to_table(table_name, [
         "surah_number", "ayat_number", "word_position", "arabic", "translation"
     ], data)
 
 
 def quran_text():
-    # this is unforunately a markdown file and needs to be manuall parsed
+    table_name = "quran_text"
+
+    # This is a markdown file and needs to be manually parsed.
     with open("raw_data/data-quran/ayah-text/uthmani-tanzil.md") as file:
         lines = file.read().splitlines()
 
     with open("raw_data/data-quran/surah/surah.json") as file:
         surah_json = json.load(file)
 
-    # maps from ayat_number to ayat_text
+    # Maps from ayat_number to ayat_text.
     ayat_text_dict = dict()
     for index, line in enumerate(lines):
         if not line.startswith("# "):
@@ -112,20 +119,23 @@ def quran_text():
             ayat_number_relative = ayat_number - ayat_number_range_start + 1
             data.append([surah_number, ayat_number_relative, ayat_text])
 
-    write_to_table("quran_text", ["surah_number", "ayat_number", "ayat_text"],
+    write_to_table(table_name, ["surah_number", "ayat_number", "ayat_text"],
                    data)
 
 
 def morphology():
+    table_name = "morphology"
+
     with open("raw_data/quranic-corpus-morphology-0.4.txt") as file:
         lines = file.read().splitlines()
 
     data = []
-    for index, line in enumerate(lines):
+    for line in lines:
         if not line.startswith("("):
             continue
 
         location, form, tag, features = line.split("\t")
+        # An example location is (2:261:8:2).
         surah_number, ayat_number, word_number, feature_number = [
             int(x) for x in location[1:-1].split(":")
         ]
@@ -134,27 +144,30 @@ def morphology():
             features
         ])
 
-    write_to_table("morphology", [
+    write_to_table(table_name, [
         "surah_number", "ayat_number", "word_number", "feature_number", "form",
         "tag", "features"
     ], data)
 
 
 def lanes_lexicon():
+    table_name = "lanes_lexicon"
+
     with open("raw_data/lexicon-pages.txt") as file:
         lines = file.read().splitlines()
 
     data = []
     for url in lines:
-        # regex to get "Adb" from "https://lexicon.quranic-research.net/data/01_A/039_Adb.html"
+        # Ex. gets "Adb" from "https://lexicon.quranic-research.net/data/01_A/039_Adb.html".
         root = re.search(r"/\d+_([A-Za-z]+)\.html$", url).group(1)
         data.append((root, url))
 
-    write_to_table("lanes_lexicon", ["root", "url"], data)
+    write_to_table(table_name, ["root", "url"], data)
 
 
-surahs()
-word_translations()
-quran_text()
-morphology()
-lanes_lexicon()
+if __name__ == "__main__":
+    surahs()
+    word_translations()
+    quran_text()
+    morphology()
+    lanes_lexicon()

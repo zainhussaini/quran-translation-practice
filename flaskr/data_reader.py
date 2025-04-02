@@ -72,16 +72,15 @@ def get_word_morphology(surah_number: int, ayat_number: int,
 
 
 # Returns link to lanes lexicon page (from lexicon.quranic-research.net).
-def get_lanes_lexicon_link(corpus_root: str) -> str | None:
-    lanes_root = convert_to_lanes_lexicon_root(corpus_root)
-    if lanes_root is None:
-        return None
-
+def get_lanes_lexicon_link(lanes_root: str) -> str | None:
     con = sqlite3.connect(INFORMATION_DB_PATH)
     cur = con.cursor()
     cur.execute("SELECT url FROM lanes_lexicon WHERE root = ?", (lanes_root, ))
     res = cur.fetchone()
     con.close()
+
+    if res is None:
+        return None
 
     return res[0]
 
