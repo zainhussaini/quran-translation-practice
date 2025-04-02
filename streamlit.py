@@ -92,11 +92,12 @@ if __name__ == "__main__":
 
         st.button("Clear entries", on_click=clear_text)
     with col3:
-        show_answer = st.toggle("Show answer", True)
+        show_answer = st.toggle("Show answer", False)
 
     arabic_translation_pairs = get_arabic_translation_pairs(
         surah_number, ayat_number)
     for i, (arabic, translation) in enumerate(arabic_translation_pairs):
+        st.divider()
         col1, col2, col3 = st.columns(COLUMN_RATIOS)
         with col1:
             st.write("#### " + arabic)
