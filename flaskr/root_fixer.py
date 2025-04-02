@@ -84,7 +84,7 @@ def get_special_cases() -> dict[str, str | None]:
     return mapping
 
 
-def basic_convert_to_lanes_lexicon_root(corpus_root) -> str:
+def basic_convert_to_lanes_lexicon_root(corpus_root: str) -> str:
     modified_root = corpus_root
 
     # If the last letter is repeated (shadda), remove it
@@ -105,7 +105,7 @@ def basic_convert_to_lanes_lexicon_root(corpus_root) -> str:
     return modified_root
 
 
-def convert_to_lanes_lexicon_root(corpus_root) -> str | None:
+def convert_to_lanes_lexicon_root(corpus_root: str) -> str | None:
     special_cases = get_special_cases()
     if corpus_root in special_cases:
         return special_cases[corpus_root]

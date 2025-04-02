@@ -1,4 +1,5 @@
 import sqlite3
+from flaskr.root_fixer import convert_to_lanes_lexicon_root
 
 INFORMATION_DB_PATH = "information.db"
 
@@ -16,7 +17,7 @@ def get_surah_names() -> list[str]:
 
 
 # Returns the number of ayat in surah specified by its number.
-def get_ayat_count(surah_number) -> int:
+def get_ayat_count(surah_number: int) -> int:
     con = sqlite3.connect(INFORMATION_DB_PATH)
     cur = con.cursor()
     cur.execute("SELECT ayat_count FROM surahs WHERE surah_number = ?",
@@ -29,7 +30,7 @@ def get_ayat_count(surah_number) -> int:
 
 
 # Returns the arabic text of an ayat.
-def get_quran_text(surah_number, ayat_number) -> str:
+def get_quran_text(surah_number: int, ayat_number: int) -> str:
     con = sqlite3.connect(INFORMATION_DB_PATH)
     cur = con.cursor()
     cur.execute(
@@ -42,8 +43,8 @@ def get_quran_text(surah_number, ayat_number) -> str:
 
 
 # Returns (arabic, translation) pairs for every word in an ayat.
-def get_arabic_translation_pairs(surah_number,
-                                 ayat_number) -> list[tuple[str, str]]:
+def get_arabic_translation_pairs(surah_number: int,
+                                 ayat_number: int) -> list[tuple[str, str]]:
     con = sqlite3.connect(INFORMATION_DB_PATH)
     cur = con.cursor()
     cur.execute(
@@ -56,8 +57,8 @@ def get_arabic_translation_pairs(surah_number,
     return res
 
 
-def get_word_morphology(surah_number, ayat_number,
-                        word_number) -> list[tuple[str, str, str]]:
+def get_word_morphology(surah_number: int, ayat_number: int,
+                        word_number: int) -> list[tuple[str, str, str]]:
     con = sqlite3.connect(INFORMATION_DB_PATH)
     cur = con.cursor()
     cur.execute(
@@ -71,15 +72,19 @@ def get_word_morphology(surah_number, ayat_number,
 
 
 # Returns link to lanes lexicon page (from lexicon.quranic-research.net).
-def get_lanes_lexicon_link(corpus_root):
+def get_lanes_lexicon_link(corpus_root: str) -> str | None:
+    lanes_root = convert_to_lanes_lexicon_root(corpus_root)
+    if lanes_root is None:
+        return None
+
     con = sqlite3.connect(INFORMATION_DB_PATH)
     cur = con.cursor()
-    cur.execute("SELECT url FROM lanes_lexicon WHERE root = ?", (corpus_root, ))
+    cur.execute("SELECT url FROM lanes_lexicon WHERE root = ?", (lanes_root, ))
     res = cur.fetchone()
     con.close()
 
     return res[0]
 
 
-def get_corpus_dictionary_link(corpus_root):
+def get_corpus_dictionary_link(corpus_root: str) -> str:
     return f"https://corpus.quran.com/qurandictionary.jsp?q={corpus_root}"

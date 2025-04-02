@@ -187,15 +187,8 @@ class TestLanesLexiconLinks:
         link = "https://lexicon.quranic-research.net/data/28_e/035_ye.html"
         assert get_lanes_lexicon_link("ye") == link
 
-    # def test_all_roots(self):
-    #     not_found_roots = set()
-    #     for root in get_all_roots():
-    #         try:
-    #             get_lanes_lexicon_link(root)
-    #         except:
-    #             not_found_roots.add(root)
-
-    #     assert not_found_roots == set()
+    def test_unsolved_special_case(self):
+        assert get_lanes_lexicon_link("dhq") != None
 
 
 class TestQuranicCorpusLinks:
