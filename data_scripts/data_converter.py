@@ -70,7 +70,7 @@ def word_translations():
     with open("raw_data/data-quran/word-translation/en-quranwbw.json") as file:
         word_translation_json = json.load(file)
 
-    with open("raw_data/data-quran/word-text/uthmani-quranwbw.json") as file:
+    with open("raw_data/data-quran/word-text/uthmani-qurancom.json") as file:
         word_text_json = json.load(file)
 
     data = []

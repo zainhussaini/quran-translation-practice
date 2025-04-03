@@ -1,14 +1,178 @@
-body { 
-    font-family: Arial, sans-serif; 
-    text-align: center; 
+@font-face {
+    font-family: 'Naskh';
+    src: url('fonts/UthmanTN_v2-0.ttf') format('truetype');
+    font-weight: normal;
 }
 
-.container { 
-    display: flex; 
-    justify-content: center; 
-    margin-top: 50px; 
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
 }
 
-.column { 
-    margin: 10px; 
+.container {
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+}
+
+.column {
+    margin: 10px;
+}
+
+select {
+    font-size: 20px;
+    padding: 8px;
+    height: 40px;
+}
+
+#ayatSelect {
+    width: 200px;
+}
+
+#surahSelect {
+    width: 600px;
+}
+
+h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.quran-text {
+    font-family: 'Naskh', Arial, sans-serif;
+    font-size: 40px;
+    line-height: 2;
+    direction: rtl;
+    margin: 10px auto;
+    width: 1000px;
+    padding: 8px 10px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.translation-grid {
+    width: 1000px;
+    margin: 10px auto;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.grid-controls {
+    padding: 12px;
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid-header {
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr;
+    background-color: #e0e0e0;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.grid-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr;
+    padding: 8px 10px;
+    border-bottom: 1px solid #eee;
+    min-height: 60px;
+}
+
+.grid-row:last-child {
+    border-bottom: none;
+}
+
+.grid-cell {
+    padding: 8px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+}
+
+.grid-cell.arabic {
+    font-family: 'Naskh', Arial, sans-serif;
+    font-size: 40px;
+    direction: rtl;
+    line-height: 2;
+    padding: 8px 10px;
+    text-align: right;
+}
+
+.translation-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.translation-input:focus {
+    outline: none;
+    border-color: #2196f3;
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
+
+.grid-cell.translation {
+    font-size: 16px;
+    color: #666;
+}
+
+.grid-cell.translation.hidden {
+    display: none;
+}
+
+.control-button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 16px;
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.control-button:hover {
+    background-color: #1976d2;
+}
+
+@media (max-width: 1020px) {
+
+    .quran-text,
+    .translation-grid {
+        width: 100%;
+        margin: 10px;
+    }
+}
+
+@media (max-width: 800px) {
+    .grid-cell.arabic {
+        font-size: 32px;
+        line-height: 2;
+    }
+
+    .grid-cell.translation,
+    .translation-input {
+        font-size: 14px;
+    }
+
+    .grid-header {
+        grid-template-columns: 1fr 2fr 2fr;
+    }
+
+    .grid-row {
+        grid-template-columns: 1fr 2fr 2fr;
+    }
+
+    .control-button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
 }

@@ -6,64 +6,114 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Selection Page</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <script>
-        function updateAyat() {
-            let surah = document.getElementById("surah-select").value;  // Get selected Surah
-
-            fetch("/get_ayat", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ surah: surah })  // Send selected Surah to server
-            })
-            .then(response => response.json())
-            .then(data => {
-                let ayatSelect = document.getElementById("ayat-select");
-                ayatSelect.innerHTML = "";  // Clear old options
-
-                data.ayat_numbers.forEach(number => {
-                    let option = document.createElement("option");
-                    option.value = number;
-                    option.textContent = number;
-                    ayatSelect.appendChild(option);
-                });
-            });
-        }
-    </script>
 </head>
 
 <body>
-    <h1>Welcome to the Selection Page</h1>
-    <p>Please select a Surah and Ayat number.</p>
-
-    <form method="POST">
+    <h1>Practice Translating the Quran</h1>
+    <form method="POST" id="selectionForm">
         <div class="container">
             <div class="column">
                 <h3>Surah</h3>
-                <select name="surah">
+                <select name="surah" id="surahSelect">
                     {% for option in surah_names %}
-                    <option value="{{ option }}" {% if selected_surah==option %}selected{% endif %}>{{ option }}
-                    </option>
+                    <option value="{{ loop.index }}" {% if result and result.surah|int==loop.index %}selected{% endif
+                        %}>{{ option }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="column">
-                <h3>Ayat number</h3>
-                <select name="ayat">
+                <h3>Ayat</h3>
+                <select name="ayat" id="ayatSelect">
                     {% for option in ayat_numbers %}
-                    <option value="{{ option }}" {% if selected_ayat==option %}selected{% endif %}>{{ option }}</option>
+                    <option value="{{ option }}" {% if result and result.ayat|int==option|int %}selected{% endif %}>{{
+                        option }}</option>
                     {% endfor %}
                 </select>
             </div>
         </div>
-        <br>
-        <button type="submit">Submit</button>
     </form>
 
-    {% if selected_surah and selected_ayat %}
-    <h2>You selected:</h2>
-    <p><strong>Surah:</strong> {{ selected_surah }}</p>
-    <p><strong>Ayat:</strong> {{ selected_ayat }}</p>
-    {% endif %}
+    <div class="result-container">
+        <p class="quran-text">{{ result.quran_text }}</p>
+
+        {% if result and result.translation_pairs %}
+        <div class="translation-grid">
+            <div class="grid-controls top">
+                <button id="showAnswersTop" class="control-button">Show Suggested Translations</button>
+            </div>
+            <div class="grid-header">
+                <div class="grid-cell">Arabic</div>
+                <div class="grid-cell">Your Translation</div>
+                <div class="grid-cell">Suggested Translation</div>
+            </div>
+            {% for arabic, translation in result.translation_pairs %}
+            <div class="grid-row">
+                <div class="grid-cell arabic">{{ arabic }}</div>
+                <div class="grid-cell">
+                    <input type="text" class="translation-input">
+                </div>
+                <div class="grid-cell translation hidden">{{ translation }}</div>
+            </div>
+            {% endfor %}
+            <div class="grid-controls bottom">
+                <button id="showAnswersBottom" class="control-button">Show Suggested Translations</button>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        const form = document.getElementById('selectionForm');
+        const surahSelect = document.getElementById('surahSelect');
+        const ayatSelect = document.getElementById('ayatSelect');
+
+        // Function to submit the form
+        function submitForm() {
+            form.submit();
+        }
+
+        // Function to show translations
+        function showTranslations() {
+            const correctTranslations = document.querySelectorAll('.translation');
+            correctTranslations.forEach(translation => {
+                translation.classList.remove('hidden');
+            });
+        }
+
+        // Handle surah change
+        surahSelect.addEventListener('change', function () {
+            const selectedSurahNumber = this.value;
+
+            // Reset ayat select to first option
+            ayatSelect.value = '1';
+
+            // Fetch the ayat count for the selected surah
+            fetch(`/get_ayat_count/${selectedSurahNumber}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Clear existing options
+                    ayatSelect.innerHTML = '';
+
+                    // Add new options based on the ayat count
+                    for (let i = 1; i <= data.count; i++) {
+                        const option = document.createElement('option');
+                        option.value = i;
+                        option.textContent = i;
+                        ayatSelect.appendChild(option);
+                    }
+                    // Submit form after updating ayat options
+                    submitForm();
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+        // Handle ayat change
+        ayatSelect.addEventListener('change', submitForm);
+
+        // Handle showing answers for both buttons
+        document.getElementById('showAnswersTop').addEventListener('click', showTranslations);
+        document.getElementById('showAnswersBottom').addEventListener('click', showTranslations);
+    </script>
 </body>
 
 </html>
