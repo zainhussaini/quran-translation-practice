@@ -23,7 +23,7 @@ def extract_root(morphology: list[tuple[str, str, str]]) -> str | None:
     return None
 
 
-def get_links(surah_number: int, ayat_number: int, word_number: int) -> tuple[str | None, str | None, str | None]:
+def get_links(surah_number: int, ayat_number: int, word_number: int) -> dict[str, str | None]:
     """Determines helpful links for a word.
 
     Args:
@@ -32,22 +32,28 @@ def get_links(surah_number: int, ayat_number: int, word_number: int) -> tuple[st
         word_number (int): The word number.
 
     Returns:
-        tuple[str, str, str]: A tuple of the corpus word link, corpus dictionary link, and lanes lexicon link.
+        dict[str, str | None]: A dictionary which has the keys "corpus_word_link",
+                               "corpus_dictionary_link", and "lanes_lexicon_link"
+                               and values which are the links if they exist, otherwise None.
     """
+    links_dict = {}
     corpus_word_link = get_corpus_word_link(
         surah_number, ayat_number, word_number)
+    links_dict['corpus_word_link'] = corpus_word_link
     
     morphology = get_word_morphology(surah_number, ayat_number, word_number)
     corpus_root = extract_root(morphology)
     if corpus_root is None:
-        return corpus_word_link, None, None
+        return links_dict
     corpus_dictionary_link = get_corpus_dictionary_link(corpus_root)
+    links_dict['corpus_dictionary_link'] = corpus_dictionary_link
 
     lanes_root = convert_to_lanes_lexicon_root(corpus_root)
     if lanes_root is None:
-        return corpus_word_link, corpus_dictionary_link, None
+        return links_dict
     lanes_lexicon_link = get_lanes_lexicon_link(lanes_root)
-    return corpus_word_link, corpus_dictionary_link, lanes_lexicon_link
+    links_dict['lanes_lexicon_link'] = lanes_lexicon_link
+    return links_dict
 
 
 if __name__ == "__main__":

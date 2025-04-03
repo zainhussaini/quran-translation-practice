@@ -21,32 +21,37 @@ body {
 .selection-row {
     display: flex;
     align-items: flex-end;
-    gap: 10px;
+    gap: 30px;
     flex-wrap: wrap;
 }
 
 .selection-item {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
     gap: 5px;
     min-width: 200px;
 }
 
 .selection-item:first-child {
     flex: 2;
+    min-width: 300px;
 }
 
 .selection-item:nth-child(2) {
     flex: 1.5;
+    min-width: 200px;
 }
 
 .selection-item:last-child {
     flex: 1;
+    min-width: 120px;
 }
 
 .selection-item h3 {
-    font-size: 24px;
+    font-size: 18px;
     margin: 0;
+    white-space: nowrap;
 }
 
 select {
@@ -72,7 +77,7 @@ h3 {
 
 .quran-text {
     font-family: 'Naskh', Arial, sans-serif;
-    font-size: 40px;
+    font-size: 32px;
     line-height: 2;
     direction: rtl;
     margin: 10px auto;
@@ -101,18 +106,47 @@ h3 {
 
 .grid-header {
     display: grid;
-    grid-template-columns: 1fr 2fr 2fr;
+    grid-template-columns: auto 2fr 2fr;
     background-color: #e0e0e0;
     font-weight: bold;
     padding: 10px;
+    align-items: center;
+    gap: 20px;
+}
+
+.grid-header .grid-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid-header .grid-cell:first-child {
+    justify-content: flex-end;
+}
+
+.grid-header .grid-cell:nth-child(2) {
+    justify-content: center;
+}
+
+.grid-header .grid-cell:last-child {
+    justify-content: flex-start;
+}
+
+.grid-header .control-button {
+    height: 32px;
+    font-size: 14px;
+    padding: 4px 8px;
+    margin: 0;
+    width: auto;
 }
 
 .grid-row {
     display: grid;
-    grid-template-columns: 1fr 2fr 2fr;
+    grid-template-columns: auto 2fr 2fr;
     padding: 8px 10px;
     border-bottom: 1px solid #eee;
     min-height: 60px;
+    gap: 20px;
 }
 
 .grid-row:last-child {
@@ -128,11 +162,12 @@ h3 {
 
 .grid-cell.arabic {
     font-family: 'Naskh', Arial, sans-serif;
-    font-size: 40px;
+    font-size: 32px;
     direction: rtl;
     line-height: 1;
-    padding: 8px 10px;
+    padding: 8px 0;
     text-align: right;
+    white-space: nowrap;
 }
 
 .translation-input {
@@ -217,6 +252,7 @@ h3 {
     height: 40px;
     white-space: nowrap;
     width: 100%;
+    min-width: 120px;
 }
 
 .control-button:hover {
@@ -235,10 +271,49 @@ h3 {
     .selection-row {
         flex-direction: column;
         align-items: stretch;
+        gap: 15px;
     }
 
     .selection-item {
         width: 100%;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+    }
+
+    .selection-item:first-child {
+        flex: none;
+        min-width: 0;
+    }
+
+    .selection-item:nth-child(2) {
+        flex: none;
+        min-width: 0;
+    }
+
+    .selection-item:last-child {
+        flex: none;
+        min-width: 0;
+    }
+
+    .selection-item h3 {
+        text-align: left;
+        font-size: 16px;
+        margin: 0;
+        min-width: 60px;
+        white-space: nowrap;
+    }
+
+    select {
+        width: 100%;
+        min-width: 100%;
+        height: 44px;
+        font-size: 16px;
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 0 12px;
     }
 
     .grid-cell.arabic {
@@ -252,17 +327,20 @@ h3 {
     }
 
     .grid-header {
-        grid-template-columns: 1fr 2fr 2fr;
+        grid-template-columns: auto 2fr 2fr;
+        gap: 20px;
     }
 
     .grid-row {
-        grid-template-columns: 1fr 2fr 2fr;
+        grid-template-columns: auto 2fr 2fr;
+        gap: 20px;
     }
 
     .control-button {
         width: 100%;
-        font-size: 14px;
-        margin-top: 24px;
+        font-size: 16px;
+        height: 44px;
+        margin-top: 0;
     }
 }
 

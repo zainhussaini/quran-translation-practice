@@ -27,8 +27,8 @@ def home():
     translation_pairs = get_arabic_translation_pairs(selected_surah_number, selected_ayat)
     words_data = []
     for i, (arabic, translation) in enumerate(translation_pairs, start=1):
-        corpus_dict_link, corpus_word_link, lanes_link = get_links(selected_surah_number, selected_ayat, i)
-        words_data.append((arabic, translation, corpus_dict_link, corpus_word_link, lanes_link))
+        link_dict = get_links(selected_surah_number, selected_ayat, i)
+        words_data.append((arabic, translation, link_dict))
     
     result = {
         'surah': selected_surah_number,
