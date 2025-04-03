@@ -87,3 +87,6 @@ def get_lanes_lexicon_link(lanes_root: str) -> str | None:
 
 def get_corpus_dictionary_link(corpus_root: str) -> str:
     return f"https://corpus.quran.com/qurandictionary.jsp?q={corpus_root}"
+
+def get_corpus_word_link(surah_number: int, ayat_number: int, word_number: int) -> str:
+    return f"https://corpus.quran.com/wordmorphology.jsp?location={surah_number}:{ayat_number}:{word_number}"

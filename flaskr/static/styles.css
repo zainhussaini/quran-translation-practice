@@ -11,26 +11,58 @@ body {
 
 .container {
     display: flex;
-    justify-content: center;
-    margin: 10px;
+    flex-direction: column;
+    gap: 10px;
+    margin: 10px auto;
+    width: 1000px;
+    max-width: 100%;
 }
 
-.column {
-    margin: 10px;
+.selection-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.selection-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 200px;
+}
+
+.selection-item:first-child {
+    flex: 2;
+}
+
+.selection-item:nth-child(2) {
+    flex: 1.5;
+}
+
+.selection-item:last-child {
+    flex: 1;
+}
+
+.selection-item h3 {
+    font-size: 24px;
+    margin: 0;
 }
 
 select {
     font-size: 20px;
     padding: 8px;
     height: 40px;
-}
-
-#ayatSelect {
-    width: 200px;
+    width: 100%;
+    min-width: 200px;
 }
 
 #surahSelect {
-    width: 600px;
+    flex: 2;
+}
+
+#ayatSelect {
+    flex: 1;
 }
 
 h3 {
@@ -98,7 +130,7 @@ h3 {
     font-family: 'Naskh', Arial, sans-serif;
     font-size: 40px;
     direction: rtl;
-    line-height: 2;
+    line-height: 1;
     padding: 8px 10px;
     text-align: right;
 }
@@ -121,6 +153,52 @@ h3 {
 .grid-cell.translation {
     font-size: 16px;
     color: #666;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.translation-text {
+    margin-bottom: 8px;
+    text-align: left;
+    width: 100%;
+}
+
+.morphology {
+    font-size: 14px;
+    color: #666;
+    border-top: 1px solid #eee;
+    padding-top: 8px;
+    margin-top: 8px;
+    width: 100%;
+    text-align: left;
+}
+
+.morphology-item {
+    margin-bottom: 4px;
+    text-align: left;
+}
+
+.morphology-item:last-child {
+    margin-bottom: 0;
+}
+
+.morphology-item .form {
+    font-weight: bold;
+    margin-right: 8px;
+    text-align: left;
+}
+
+.morphology-item .tag {
+    color: #2196f3;
+    margin-right: 8px;
+    text-align: left;
+}
+
+.morphology-item .features {
+    color: #666;
+    text-align: left;
 }
 
 .grid-cell.translation.hidden {
@@ -129,7 +207,6 @@ h3 {
 
 .control-button {
     padding: 10px 20px;
-    margin: 0 10px;
     font-size: 16px;
     background-color: #2196f3;
     color: white;
@@ -137,6 +214,9 @@ h3 {
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
+    height: 40px;
+    white-space: nowrap;
+    width: 100%;
 }
 
 .control-button:hover {
@@ -144,7 +224,6 @@ h3 {
 }
 
 @media (max-width: 1020px) {
-
     .quran-text,
     .translation-grid {
         width: 100%;
@@ -153,6 +232,15 @@ h3 {
 }
 
 @media (max-width: 800px) {
+    .selection-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .selection-item {
+        width: 100%;
+    }
+
     .grid-cell.arabic {
         font-size: 32px;
         line-height: 2;
@@ -172,7 +260,55 @@ h3 {
     }
 
     .control-button {
-        padding: 8px 16px;
+        width: 100%;
+        font-size: 14px;
+        margin-top: 24px;
+    }
+}
+
+@media (max-width: 600px) {
+    select {
+        font-size: 16px;
+    }
+
+    h3 {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 400px) {
+    select {
         font-size: 14px;
     }
+
+    h3 {
+        font-size: 18px;
+    }
+}
+
+.links {
+    font-size: 14px;
+    color: #666;
+    border-top: 1px solid #eee;
+    padding-top: 8px;
+    margin-top: 8px;
+    width: 100%;
+    text-align: left;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.link-item {
+    color: #2196f3;
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background-color: #e3f2fd;
+    transition: background-color 0.3s;
+}
+
+.link-item:hover {
+    background-color: #bbdefb;
+    text-decoration: underline;
 }
