@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selection Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function updateAyat() {
+            let surah = document.getElementById("surah-select").value;  // Get selected Surah
+
+            fetch("/get_ayat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ surah: surah })  // Send selected Surah to server
+            })
+            .then(response => response.json())
+            .then(data => {
+                let ayatSelect = document.getElementById("ayat-select");
+                ayatSelect.innerHTML = "";  // Clear old options
+
+                data.ayat_numbers.forEach(number => {
+                    let option = document.createElement("option");
+                    option.value = number;
+                    option.textContent = number;
+                    ayatSelect.appendChild(option);
+                });
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <h1>Welcome to the Selection Page</h1>
+    <p>Please select a Surah and Ayat number.</p>
+
+    <form method="POST">
+        <div class="container">
+            <div class="column">
+                <h3>Surah</h3>
+                <select name="surah">
+                    {% for option in surah_names %}
+                    <option value="{{ option }}" {% if selected_surah==option %}selected{% endif %}>{{ option }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="column">
+                <h3>Ayat number</h3>
+                <select name="ayat">
+                    {% for option in ayat_numbers %}
+                    <option value="{{ option }}" {% if selected_ayat==option %}selected{% endif %}>{{ option }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+
+    {% if selected_surah and selected_ayat %}
+    <h2>You selected:</h2>
+    <p><strong>Surah:</strong> {{ selected_surah }}</p>
+    <p><strong>Ayat:</strong> {{ selected_ayat }}</p>
+    {% endif %}
+</body>
+
+</html>
