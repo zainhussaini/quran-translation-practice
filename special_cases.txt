@@ -1,3 +1,4 @@
+$fy
 HSy -> HSw (double)
 Tgy -> Tgw (double)
 dhq
@@ -20,11 +21,8 @@ mlw
 msw
 nAy -> nAe (special lane encoding)
 ndw
-nf
-nq
 nsy -> nsw (double)
 ntq
-nw
 nzg
 qSw
 qly -> qlw (double)
@@ -36,7 +34,6 @@ vby -> vbw (double)
 wbq
 wjf
 wjl
-wq
 wsn
-ydy
+ydy -> yd (special lane encoding)
 ynE

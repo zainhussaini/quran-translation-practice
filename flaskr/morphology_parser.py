@@ -15,9 +15,8 @@ def extract_root(morphology: list[tuple[str, str, str]]) -> str | None:
     Returns:
         str | None: The root of the word if found, otherwise None.
     """
-    pattern = r'ROOT:([A-Za-z]+)'
     for form, tag, features in morphology:
-        match = re.search(pattern, features)
+        match = re.search(r'ROOT:([^|]+)', features)
         if match:
             return match.group(1)
     return None

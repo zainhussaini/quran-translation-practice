@@ -2,30 +2,20 @@ import sqlite3
 import re
 import functools
 import os
-
-INFORMATION_DB_PATH = "information.db"
-SPECIAL_CASES_FILE = "special_cases.txt"
+from config import INFORMATION_DB_PATH, SPECIAL_CASES_FILE
 
 
 @functools.cache
 def get_all_roots_from_corpus() -> set[str]:
     con = sqlite3.connect(INFORMATION_DB_PATH)
     cur = con.cursor()
-    cur.execute("SELECT features FROM morphology", ())
+    cur.execute("SELECT root FROM quranic_corpus", ())
     res = cur.fetchall()
     con.close()
 
-    # Regular expression pattern to extract the value after 'ROOT:'
-    pattern = r'ROOT:([A-Za-z]+)'
-
     roots = set()
-    for features in res:
-        match = re.search(pattern, features[0])
-        if not match:
-            # Some features do not have roots.
-            continue
-        root = match.group(1)
-        roots.add(root)
+    for res_item in res:
+        roots.add(res_item[0])
 
     return roots
 
@@ -57,13 +47,13 @@ def get_special_cases() -> dict[str, str | None]:
     # Maps from corpus_root to lanes_root.
     mapping = dict()
     for line in lines:
-        match = re.search(r"([a-zA-Z]+) -> ([a-zA-Z]+)", line)
+        match = re.search(r"([^ ]+) -> ([^ ]+)", line)
         if match:
             corpus_root, lanes_root = match.group(1), match.group(2)
             mapping[corpus_root] = lanes_root
             continue
 
-        match = re.search(r"([a-zA-Z]+)", line)
+        match = re.search(r"([^ ]+)", line)
         if match:
             corpus_root = match.group(1)
             mapping[corpus_root] = None
@@ -80,6 +70,12 @@ def get_special_cases() -> dict[str, str | None]:
 def basic_convert_to_lanes_lexicon_root(corpus_root: str) -> str:
     modified_root = corpus_root
 
+    # Replace "$" with "X" (both stand for sheen).
+    modified_root = modified_root.replace("$", "X")
+    
+    # Replace "*" with "c" (both stand for thal).
+    modified_root = modified_root.replace("*", "c")
+
     # If the last letter is repeated (shadda), remove it.
     if len(modified_root) == 3 and modified_root[1] == modified_root[2]:
         modified_root = modified_root[:2]
@@ -92,7 +88,7 @@ def basic_convert_to_lanes_lexicon_root(corpus_root: str) -> str:
     if "A" in modified_root[1:]:
         modified_root = modified_root[0] + modified_root[1:].replace("A", "O")
 
-    # Use "e" as the ending instead of "y".
+    # Replace "y" with "e" when it's the last letter (both stand for "ya").
     if modified_root[-1] == "y":
         modified_root = modified_root[:-1] + "e"
 

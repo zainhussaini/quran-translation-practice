@@ -9,195 +9,161 @@
 </head>
 
 <body>
-    <h1>Practice Translating the Quran</h1>
-    <form method="POST" id="selectionForm">
-        <div class="container">
+    <header>
+        <h1>Quran Translation Practice</h1>
+    </header>
+
+    <main>
+        <form method="POST" id="selectionForm">
             <div class="selection-row">
-                <div class="selection-item">
-                    <h3>Surah:</h3>
+                <div class="selection-item surah-select">
                     <select name="surah" id="surahSelect">
                         {% for option in surah_names %}
-                        <option value="{{ loop.index }}" {% if result and result.surah|int == loop.index %}selected{% endif %}>{{ option }}</option>
+                        <option value="{{ loop.index }}" {% if result and result.surah|int==loop.index %}selected{% endif %}>{{ option }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <div class="selection-item">
-                    <h3>Ayat:</h3>
-                    <select name="ayat" id="ayatSelect">
-                        {% for option in ayat_numbers %}
-                        <option value="{{ option }}" {% if result and result.ayat|int == option|int %}selected{% endif %}>{{ option }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="selection-item">
-                    <button type="button" id="nextAyat" class="control-button">Next Ayat</button>
-                </div>
-            </div>
-        </div>
-    </form>
-
-    <div class="result-container">
-        <p class="quran-text">{{ result.quran_text }}</p>
-        
-        {% if result and result.words_data %}
-        <div class="translation-grid">
-            <div class="grid-header">
-                <div class="grid-cell">Arabic</div>
-                <div class="grid-cell">Your Translation</div>
-                <div class="grid-cell">
-                    <button id="showAnswers" class="control-button">Show Translations</button>
-                </div>
-            </div>
-            {% for arabic, translation, links_dict in result.words_data %}
-            <div class="grid-row">
-                <div class="grid-cell arabic">{{ arabic }}</div>
-                <div class="grid-cell">
-                    <input type="text" class="translation-input">
-                </div>
-                <div class="grid-cell translation hidden">
-                    <div class="translation-text">{{ translation }}</div>
-                    <div class="links">
-                        {% if links_dict['corpus_word_link'] %}
-                        <a href="{{ links_dict['corpus_word_link'] }}" target="_blank" class="link-item">Corpus Word</a>
-                        {% endif %}
-                        {% if links_dict['corpus_dictionary_link'] %}
-                        <a href="{{ links_dict['corpus_dictionary_link'] }}" target="_blank" class="link-item">Corpus Dictionary</a>
-                        {% endif %}
-                        {% if links_dict['lanes_lexicon_link'] %}
-                        <a href="{{ links_dict['lanes_lexicon_link'] }}" target="_blank" class="link-item">Lanes Lexicon</a>
-                        {% endif %}
+                <div class="selection-group">
+                    <div class="selection-item ayat-select">
+                        <select name="ayat" id="ayatSelect">
+                            {% for option in ayat_numbers %}
+                            <option value="{{ option }}" {% if result and result.ayat|int==option|int %}selected{% endif %}>{{ option }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="selection-item">
+                        <button type="button" id="nextButton" class="control-button">Next</button>
                     </div>
                 </div>
             </div>
-            {% endfor %}
+        </form>
+
+        <div class="result-container">
+            <p class="quran-text">{{ result.quran_text }}</p>
+
+            <div class="controls">
+                <button id="showTranslationsButton" class="control-button">Show Answers</button>
+            </div>
+
+            {% if result and result.words_data %}
+            <div class="translation-grid">
+                <div class="grid-header">
+                    <div class="grid-cell">Arabic</div>
+                    <div class="grid-cell">Translation</div>
+                </div>
+                {% for arabic, translation, links_dict in result.words_data %}
+                <div class="grid-row">
+                    <div class="grid-cell arabic">{{ arabic }}</div>
+                    <div class="grid-cell">
+                        <input type="text" class="translation-input">
+                        <div class="translation-group hidden">
+                            <div class="translation-text">{{ translation }}</div>
+                            <div class="links">
+                                {% if links_dict['corpus_word_link'] %}
+                                <a href="{{ links_dict['corpus_word_link'] }}" target="_blank" class="link-item">Word Grammar</a>
+                                {% endif %}
+                                {% if links_dict['corpus_dictionary_link'] %}
+                                <a href="{{ links_dict['corpus_dictionary_link'] }}" target="_blank" class="link-item">Other Uses</a>
+                                {% endif %}
+                                {% if links_dict['lanes_lexicon_link'] %}
+                                <a href="{{ links_dict['lanes_lexicon_link'] }}" target="_blank" class="link-item">Lanes Lexicon</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
         </div>
-        {% endif %}
-    </div>
+    </main>
 
     <script>
         const form = document.getElementById('selectionForm');
         const surahSelect = document.getElementById('surahSelect');
         const ayatSelect = document.getElementById('ayatSelect');
-        const nextAyatButton = document.getElementById('nextAyat');
-        const showAnswersButton = document.getElementById('showAnswers');
+        const nextButton = document.getElementById('nextButton');
+        const showTranslationsButton = document.getElementById('showTranslationsButton');
 
-        // Function to calculate and set Arabic column width
         function setArabicColumnWidth() {
             const arabicCells = document.querySelectorAll('.grid-cell.arabic');
             let maxWidth = 0;
-            
-            // Create a temporary div to measure text width
             const measureDiv = document.createElement('div');
-            measureDiv.style.position = 'absolute';
-            measureDiv.style.visibility = 'hidden';
-            measureDiv.style.whiteSpace = 'nowrap';
-            measureDiv.style.fontFamily = 'Naskh, Arial, sans-serif';
-            measureDiv.style.fontSize = '32px';
+            
+            measureDiv.style.cssText = `
+                position: absolute;
+                visibility: hidden;
+                white-space: nowrap;
+                font-family: Naskh, Arial, sans-serif;
+                font-size: 24px;
+            `;
             document.body.appendChild(measureDiv);
 
-            // Measure each Arabic cell
             arabicCells.forEach(cell => {
                 measureDiv.textContent = cell.textContent;
-                const width = measureDiv.offsetWidth;
-                maxWidth = Math.max(maxWidth, width);
+                maxWidth = Math.max(maxWidth, measureDiv.offsetWidth);
             });
 
-            // Clean up
             document.body.removeChild(measureDiv);
-
-            // Add padding and gap to the max width
-            maxWidth += 40; // 20px padding on each side
-
-            // Set the width on both the header and rows
-            const gridHeader = document.querySelector('.grid-header');
-            const gridRows = document.querySelectorAll('.grid-row');
-            const templateColumns = `${maxWidth}px 2fr 2fr`;
-
-            gridHeader.style.gridTemplateColumns = templateColumns;
-            gridRows.forEach(row => {
-                row.style.gridTemplateColumns = templateColumns;
-            });
+            document.documentElement.style.setProperty('--arabic-column-width', `${maxWidth + 16}px`);
         }
 
-        // Function to submit the form
+        window.addEventListener('load', setArabicColumnWidth);
+
         function submitForm() {
             form.submit();
         }
 
-        // Function to toggle translations
         function toggleTranslations() {
-            const correctTranslations = document.querySelectorAll('.translation');
-            const isHidden = correctTranslations[0].classList.contains('hidden');
+            const translationGroups = document.querySelectorAll('.translation-group');
+            const isHidden = translationGroups[0].classList.contains('hidden');
             
-            correctTranslations.forEach(translation => {
-                translation.classList.toggle('hidden');
+            translationGroups.forEach(group => {
+                group.classList.toggle('hidden', !isHidden);
             });
 
-            // Update button text
-            showAnswersButton.textContent = isHidden ? 'Hide Translations' : 'Show Translations';
-            
-            // Recalculate width after showing/hiding translations
-            setArabicColumnWidth();
+            showTranslationsButton.textContent = isHidden ? 'Hide Answers' : 'Show Answers';
         }
 
-        // Handle next ayat button click
-        nextAyatButton.addEventListener('click', function() {
+        nextButton.addEventListener('click', () => {
             const currentSurah = parseInt(surahSelect.value);
             const currentAyat = parseInt(ayatSelect.value);
-            
-            // Get the next ayat count
+
             fetch(`/get_ayat_count/${currentSurah}`)
                 .then(response => response.json())
                 .then(data => {
                     if (currentAyat < data.count) {
-                        // Just increment the ayat
                         ayatSelect.value = currentAyat + 1;
                     } else if (currentSurah < 114) {
-                        // Move to next surah, ayat 1
                         surahSelect.value = currentSurah + 1;
                         ayatSelect.value = 1;
                     }
-                    // Submit form to update the view
                     submitForm();
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(console.error);
         });
 
-        // Handle surah change
         surahSelect.addEventListener('change', function() {
             const selectedSurahNumber = this.value;
-            
-            // Reset ayat select to first option
             ayatSelect.value = '1';
-            
-            // Fetch the ayat count for the selected surah
+
             fetch(`/get_ayat_count/${selectedSurahNumber}`)
                 .then(response => response.json())
                 .then(data => {
-                    // Clear existing options
                     ayatSelect.innerHTML = '';
-                    
-                    // Add new options based on the ayat count
                     for (let i = 1; i <= data.count; i++) {
                         const option = document.createElement('option');
                         option.value = i;
                         option.textContent = i;
                         ayatSelect.appendChild(option);
                     }
-                    // Submit form after updating ayat options
                     submitForm();
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(console.error);
         });
 
-        // Handle ayat change
         ayatSelect.addEventListener('change', submitForm);
-
-        // Handle showing/hiding answers
-        showAnswersButton.addEventListener('click', toggleTranslations);
-
-        // Calculate width when the page loads
-        window.addEventListener('load', setArabicColumnWidth);
+        showTranslationsButton.addEventListener('click', toggleTranslations);
     </script>
 </body>
 

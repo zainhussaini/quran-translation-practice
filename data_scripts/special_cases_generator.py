@@ -2,8 +2,7 @@ from flaskr.root_fixer import get_all_roots_from_corpus, get_all_roots_from_lane
 from flaskr.data_reader import get_lanes_lexicon_link, get_corpus_dictionary_link
 import os
 import re
-
-FILE = "special_cases.txt"
+from config import SPECIAL_CASES_FILE
 
 VERIFIED_LANES_DOUBLES = [
     "HSw", "Tgw", "dhw", "fOw", "ftw", "jbw", "nsw", "qlw", "qnw", "sEw",
@@ -25,16 +24,16 @@ def generate_special_cases():
         if converted_root not in lanes_roots:
             unmatched_roots.add(root)
 
-    if os.path.exists(FILE):
-        raise Exception(f"file {FILE} already exists")
-    with open(FILE, "w") as file:
+    if os.path.exists(SPECIAL_CASES_FILE):
+        raise Exception(f"file {SPECIAL_CASES_FILE} already exists")
+    with open(SPECIAL_CASES_FILE, "w") as file:
         file.write("\n".join(sorted(list(unmatched_roots))))
 
 
 # Goes through each line in file and checks whether it's valid.  Requires manual
 # verification if there's a new entry, then it can be added to the lists below.
 def verify_all_cases():
-    with open(FILE, "r") as file:
+    with open(SPECIAL_CASES_FILE, "r") as file:
         lines = file.read().splitlines()
 
     corpus_roots = get_all_roots_from_corpus()
@@ -45,52 +44,39 @@ def verify_all_cases():
 
     for line in lines:
         # Matches a root without a fix.
-        if match := re.search(r"^([a-zA-Z]+)$", line):
+        if match := re.search(r"^([^ ]+)$", line):
             corpus_root = match.group(1)
-
-            assert corpus_root in corpus_roots
-            assert corpus_root not in lanes_roots
+            
+            if corpus_root not in corpus_roots:
+                raise Exception(f"corpus root {corpus_root} is not in corpus_roots")
+            if corpus_root in lanes_roots:
+                raise Exception(f"corpus root {corpus_root} is in lanes_roots")
 
         # Matches a fix.
-        elif match := re.search(r"^([a-zA-Z]+) -> ([a-zA-Z]+) \((.+)\)$",
+        elif match := re.search(r"^([^ ]+) -> ([^ ]+) \((.+)\)$",
                                 line):
             corpus_root = match.group(1)
             lanes_root = match.group(2)
             note = match.group(3)
 
-            assert corpus_root in corpus_roots
-            assert lanes_root in lanes_roots
+            if corpus_root not in corpus_roots:
+                raise Exception(f"corpus root {corpus_root} is not in corpus_roots")
+            if lanes_root not in lanes_roots:
+                raise Exception(f"lanes root {lanes_root} is not in lanes_roots")
 
             # The note indicates what type of fix it is.
             if note == "double":
                 verify_double(corpus_root, lanes_root)
             elif note == "special lane encoding":
-                verify_special_lane_encoding(corpus_root, lanes_root)
-            elif match := re.search(r"^correction\: ([a-zA-Z]+)$", note):
+                pass
+            elif match := re.search(r"^correction\: ([^ ]+)$", note):
                 corpus_root_correction = match.group(1)
                 verify_correction(corpus_root, corpus_root_correction,
                                   lanes_root)
             else:
                 raise Exception(f"Invalid note {note}")
         else:
-            raise Exception(f"Invalid line {line} in {FILE}")
-
-
-def verify_special_lane_encoding(corpus_root, lanes_root):
-    # The special lane encoding is when the letters are converted in a normal
-    # way, but not following all of the typical rules. For example, "nAy" would
-    # normally be converted to "nOe", but for some reason the "A" remains.
-    allowable_transforms = {corpus_root}
-    for transformed in allowable_transforms.copy():
-        allowable_transforms.add(transformed.replace("y", "w"))
-    for transformed in allowable_transforms.copy():
-        allowable_transforms.add(transformed.replace("y", "e"))
-    for transformed in allowable_transforms.copy():
-        allowable_transforms.add(transformed.replace("A", "O"))
-
-    if lanes_root not in allowable_transforms:
-        raise Exception(
-            f"Unexpected transform from {corpus_root} to {lanes_root}")
+            raise Exception(f"Invalid line {line} in {SPECIAL_CASES_FILE}")
 
 
 def verify_double(corpus_root, lanes_root):
@@ -135,7 +121,7 @@ def verify_correction(corpus_root, corpus_root_correction, lanes_root):
 
 
 if __name__ == "__main__":
-    if not os.path.exists(FILE):
+    if not os.path.exists(SPECIAL_CASES_FILE):
         generate_special_cases()
 
     verify_all_cases()

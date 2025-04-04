@@ -1,7 +1,6 @@
 import sqlite3
 from flaskr.root_fixer import convert_to_lanes_lexicon_root
-
-INFORMATION_DB_PATH = "information.db"
+from config import INFORMATION_DB_PATH
 
 
 # Returns an ordered list of surah names.
@@ -48,7 +47,7 @@ def get_arabic_translation_pairs(surah_number: int,
     con = sqlite3.connect(INFORMATION_DB_PATH)
     cur = con.cursor()
     cur.execute(
-        "SELECT arabic, translation FROM word_translations WHERE surah_number = ? AND ayat_number = ? ORDER BY word_position",
+        "SELECT arabic, translation FROM word_translations WHERE surah_number = ? AND ayat_number = ? ORDER BY word_number",
         (surah_number, ayat_number))
     res = cur.fetchall()
     con.close()
@@ -85,8 +84,17 @@ def get_lanes_lexicon_link(lanes_root: str) -> str | None:
     return res[0]
 
 
-def get_corpus_dictionary_link(corpus_root: str) -> str:
-    return f"https://corpus.quran.com/qurandictionary.jsp?q={corpus_root}"
+def get_corpus_dictionary_link(corpus_root: str) -> str | None:
+    con = sqlite3.connect(INFORMATION_DB_PATH)
+    cur = con.cursor()
+    cur.execute("SELECT url FROM quranic_corpus WHERE root = ?", (corpus_root, ))
+    res = cur.fetchone()
+    con.close()
+
+    if res is None:
+        return None
+
+    return res[0]
 
 def get_corpus_word_link(surah_number: int, ayat_number: int, word_number: int) -> str:
     return f"https://corpus.quran.com/wordmorphology.jsp?location={surah_number}:{ayat_number}:{word_number}"

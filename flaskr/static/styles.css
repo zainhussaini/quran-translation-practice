@@ -4,109 +4,119 @@
     font-weight: normal;
 }
 
+/* Base Styles */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-}
-
-.container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin: 10px auto;
     width: 1000px;
     max-width: 100%;
+    margin: 0 auto;
 }
 
+/* Header Styles */
+header {
+    margin: 16px 0;
+}
+
+/* Selection Form Styles */
 .selection-row {
     display: flex;
-    align-items: flex-end;
-    gap: 30px;
     flex-wrap: wrap;
+    gap: 16px;
+    margin: 0 16px;
+    align-items: center;
+}
+
+.selection-group {
+    display: flex;
+    gap: 16px;
+    flex: 1;
+    min-width: 224px;
 }
 
 .selection-item {
     display: flex;
-    flex-direction: row;
     align-items: center;
-    gap: 5px;
-    min-width: 200px;
 }
 
-.selection-item:first-child {
-    flex: 2;
+.surah-select {
+    flex: 3;
     min-width: 300px;
 }
 
-.selection-item:nth-child(2) {
-    flex: 1.5;
-    min-width: 200px;
-}
-
-.selection-item:last-child {
+.ayat-select {
     flex: 1;
-    min-width: 120px;
-}
-
-.selection-item h3 {
-    font-size: 18px;
-    margin: 0;
-    white-space: nowrap;
+    min-width: 100px;
 }
 
 select {
-    font-size: 20px;
+    font-size: 16px;
     padding: 8px;
-    height: 40px;
     width: 100%;
-    min-width: 200px;
+    height: 40px;
 }
 
-#surahSelect {
-    flex: 2;
+/* Button Styles */
+.control-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    height: 40px;
+    white-space: nowrap;
 }
 
-#ayatSelect {
-    flex: 1;
+.control-button:hover {
+    background-color: #1976d2;
 }
 
-h3 {
-    font-size: 24px;
-    margin-bottom: 10px;
+#nextButton {
+    width: 100px;
+    flex-shrink: 0;
+}
+
+#showTranslationsButton {
+    width: auto;
+    min-width: 120px;
+}
+
+/* Result Container Styles */
+.result-container {
+    margin: 16px;
 }
 
 .quran-text {
     font-family: 'Naskh', Arial, sans-serif;
-    font-size: 32px;
+    font-size: 24px;
     line-height: 2;
     direction: rtl;
-    margin: 10px auto;
-    width: 1000px;
-    padding: 8px 10px;
+    margin: 0;
+    padding: 8px;
     background-color: #f9f9f9;
     border-radius: 4px;
+    border: 1px solid #e0e0e0;
     box-sizing: border-box;
 }
 
+.controls {
+    margin: 16px;
+}
+
+/* Translation Grid Styles */
 .translation-grid {
-    width: 1000px;
     margin: 10px auto;
     background-color: #f9f9f9;
     border-radius: 4px;
     box-sizing: border-box;
-}
-
-.grid-controls {
-    padding: 12px;
-    background-color: #f9f9f9;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 .grid-header {
     display: grid;
-    grid-template-columns: auto 2fr 2fr;
+    grid-template-columns: var(--arabic-column-width) 2fr;
     background-color: #e0e0e0;
     font-weight: bold;
     padding: 10px;
@@ -120,29 +130,12 @@ h3 {
     align-items: center;
 }
 
-.grid-header .grid-cell:first-child {
-    justify-content: flex-end;
-}
-
-.grid-header .grid-cell:nth-child(2) {
-    justify-content: center;
-}
-
-.grid-header .grid-cell:last-child {
-    justify-content: flex-start;
-}
-
-.grid-header .control-button {
-    height: 32px;
-    font-size: 14px;
-    padding: 4px 8px;
-    margin: 0;
-    width: auto;
-}
+.grid-header .grid-cell:first-child { justify-content: flex-end; }
+.grid-header .grid-cell:nth-child(2) { justify-content: center; }
 
 .grid-row {
     display: grid;
-    grid-template-columns: auto 2fr 2fr;
+    grid-template-columns: var(--arabic-column-width) 2fr;
     padding: 8px 10px;
     border-bottom: 1px solid #eee;
     min-height: 60px;
@@ -157,12 +150,15 @@ h3 {
     padding: 8px;
     text-align: left;
     display: flex;
-    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: flex-start;
 }
 
 .grid-cell.arabic {
     font-family: 'Naskh', Arial, sans-serif;
-    font-size: 32px;
+    font-size: 24px;
     direction: rtl;
     line-height: 1;
     padding: 8px 0;
@@ -172,6 +168,8 @@ h3 {
 
 .translation-input {
     width: 100%;
+    min-width: 200px;
+    flex: 1;
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -185,183 +183,20 @@ h3 {
     box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
 }
 
-.grid-cell.translation {
-    font-size: 16px;
-    color: #666;
+.translation-group {
+    width: 100%;
+    min-width: 200px;
+    flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
+    gap: 8px;
 }
 
 .translation-text {
-    margin-bottom: 8px;
-    text-align: left;
-    width: 100%;
-}
-
-.morphology {
-    font-size: 14px;
-    color: #666;
-    border-top: 1px solid #eee;
-    padding-top: 8px;
-    margin-top: 8px;
-    width: 100%;
-    text-align: left;
-}
-
-.morphology-item {
-    margin-bottom: 4px;
-    text-align: left;
-}
-
-.morphology-item:last-child {
-    margin-bottom: 0;
-}
-
-.morphology-item .form {
-    font-weight: bold;
-    margin-right: 8px;
-    text-align: left;
-}
-
-.morphology-item .tag {
-    color: #2196f3;
-    margin-right: 8px;
-    text-align: left;
-}
-
-.morphology-item .features {
-    color: #666;
-    text-align: left;
-}
-
-.grid-cell.translation.hidden {
-    display: none;
-}
-
-.control-button {
-    padding: 10px 20px;
     font-size: 16px;
-    background-color: #2196f3;
-    color: white;
-    border: none;
+    padding: 8px;
     border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    height: 40px;
-    white-space: nowrap;
-    width: 100%;
-    min-width: 120px;
-}
-
-.control-button:hover {
-    background-color: #1976d2;
-}
-
-@media (max-width: 1020px) {
-    .quran-text,
-    .translation-grid {
-        width: 100%;
-        margin: 10px;
-    }
-}
-
-@media (max-width: 800px) {
-    .selection-row {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 15px;
-    }
-
-    .selection-item {
-        width: 100%;
-        flex-direction: row;
-        align-items: center;
-        gap: 8px;
-        min-width: 0;
-    }
-
-    .selection-item:first-child {
-        flex: none;
-        min-width: 0;
-    }
-
-    .selection-item:nth-child(2) {
-        flex: none;
-        min-width: 0;
-    }
-
-    .selection-item:last-child {
-        flex: none;
-        min-width: 0;
-    }
-
-    .selection-item h3 {
-        text-align: left;
-        font-size: 16px;
-        margin: 0;
-        min-width: 60px;
-        white-space: nowrap;
-    }
-
-    select {
-        width: 100%;
-        min-width: 100%;
-        height: 44px;
-        font-size: 16px;
-        background-color: white;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        padding: 0 12px;
-    }
-
-    .grid-cell.arabic {
-        font-size: 32px;
-        line-height: 2;
-    }
-
-    .grid-cell.translation,
-    .translation-input {
-        font-size: 14px;
-    }
-
-    .grid-header {
-        grid-template-columns: auto 2fr 2fr;
-        gap: 20px;
-    }
-
-    .grid-row {
-        grid-template-columns: auto 2fr 2fr;
-        gap: 20px;
-    }
-
-    .control-button {
-        width: 100%;
-        font-size: 16px;
-        height: 44px;
-        margin-top: 0;
-    }
-}
-
-@media (max-width: 600px) {
-    select {
-        font-size: 16px;
-    }
-
-    h3 {
-        font-size: 20px;
-    }
-}
-
-@media (max-width: 400px) {
-    select {
-        font-size: 14px;
-    }
-
-    h3 {
-        font-size: 18px;
-    }
+    font-weight: bold;
 }
 
 .links {
@@ -369,9 +204,6 @@ h3 {
     color: #666;
     border-top: 1px solid #eee;
     padding-top: 8px;
-    margin-top: 8px;
-    width: 100%;
-    text-align: left;
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
@@ -389,4 +221,13 @@ h3 {
 .link-item:hover {
     background-color: #bbdefb;
     text-decoration: underline;
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+.grid-cell.translation.hidden {
+    display: none !important;
 }
