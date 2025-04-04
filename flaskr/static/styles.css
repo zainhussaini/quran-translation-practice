@@ -104,6 +104,9 @@ select {
 
 .controls {
     margin: 16px;
+    display: flex;
+    gap: 16px;
+    justify-content: center;
 }
 
 /* Translation Grid Styles */
@@ -207,6 +210,11 @@ select {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+    display: none;
+}
+
+.links:not(.hidden) {
+    display: flex;
 }
 
 .link-item {

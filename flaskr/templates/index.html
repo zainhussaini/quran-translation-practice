@@ -43,6 +43,7 @@
 
             <div class="controls">
                 <button id="showTranslationsButton" class="control-button">Show Answers</button>
+                <button id="showLinksButton" class="control-button hidden">Show Links</button>
             </div>
 
             {% if result and result.words_data %}
@@ -84,6 +85,7 @@
         const ayatSelect = document.getElementById('ayatSelect');
         const nextButton = document.getElementById('nextButton');
         const showTranslationsButton = document.getElementById('showTranslationsButton');
+        const showLinksButton = document.getElementById('showLinksButton');
 
         function setArabicColumnWidth() {
             const arabicCells = document.querySelectorAll('.grid-cell.arabic');
@@ -123,6 +125,26 @@
             });
 
             showTranslationsButton.textContent = isHidden ? 'Hide Answers' : 'Show Answers';
+            
+            // Show/hide the links button based on translation visibility
+            showLinksButton.classList.toggle('hidden', !isHidden);
+            // Reset links visibility when hiding translations
+            if (isHidden) {
+                const links = document.querySelectorAll('.links');
+                links.forEach(link => link.classList.add('hidden'));
+                showLinksButton.textContent = 'Show Links';
+            }
+        }
+
+        function toggleLinks() {
+            const links = document.querySelectorAll('.links');
+            const isHidden = links[0].classList.contains('hidden');
+            
+            links.forEach(link => {
+                link.classList.toggle('hidden', !isHidden);
+            });
+
+            showLinksButton.textContent = isHidden ? 'Hide Links' : 'Show Links';
         }
 
         nextButton.addEventListener('click', () => {
@@ -164,6 +186,7 @@
 
         ayatSelect.addEventListener('change', submitForm);
         showTranslationsButton.addEventListener('click', toggleTranslations);
+        showLinksButton.addEventListener('click', toggleLinks);
     </script>
 </body>
 
