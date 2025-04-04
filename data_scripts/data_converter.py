@@ -66,10 +66,10 @@ def word_translations():
     with open("raw_data/data-quran/word/word.json", encoding='utf-8') as file:
         word_json = json.load(file)
 
-    with open("raw_data/data-quran/word-translation/en-quranwbw.json", encoding='utf-8') as file:
+    with open("raw_data/data-quran/word-translation/en-qurancom.json", encoding='utf-8') as file:
         word_translation_json = json.load(file)
 
-    with open("raw_data/data-quran/word-text/uthmani-qurancom.json", encoding='utf-8') as file:
+    with open("raw_data/data-quran/word-text/imlaei-qurancom.json", encoding='utf-8') as file:
         word_text_json = json.load(file)
 
     data = []
@@ -92,7 +92,7 @@ def quran_text():
     table_name = "quran_text"
 
     # This is a markdown file and needs to be manually parsed.
-    with open("raw_data/data-quran/ayah-text/uthmani-tanzil.md", encoding='utf-8') as file:
+    with open("raw_data/data-quran/ayah-text/imlaei-qurancom.md", encoding='utf-8') as file:
         lines = file.read().splitlines()
 
     with open("raw_data/data-quran/surah/surah.json", encoding='utf-8') as file:
