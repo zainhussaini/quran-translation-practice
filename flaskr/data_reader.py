@@ -1,9 +1,11 @@
 import sqlite3
+import functools
 from flaskr.root_fixer import convert_to_lanes_lexicon_root
 from config import INFORMATION_DB_PATH
 
 
 # Returns an ordered list of surah names.
+@functools.cache
 def get_surah_names() -> list[str]:
     con = sqlite3.connect(INFORMATION_DB_PATH)
     cur = con.cursor()
@@ -16,6 +18,7 @@ def get_surah_names() -> list[str]:
 
 
 # Returns the number of ayat in surah specified by its number.
+@functools.cache
 def get_ayat_count(surah_number: int) -> int:
     con = sqlite3.connect(INFORMATION_DB_PATH)
     cur = con.cursor()
@@ -29,6 +32,7 @@ def get_ayat_count(surah_number: int) -> int:
 
 
 # Returns the arabic text of an ayat.
+@functools.lru_cache(maxsize=16)
 def get_quran_text(surah_number: int, ayat_number: int) -> str:
     con = sqlite3.connect(INFORMATION_DB_PATH)
     cur = con.cursor()
@@ -42,6 +46,7 @@ def get_quran_text(surah_number: int, ayat_number: int) -> str:
 
 
 # Returns (arabic, translation) pairs for every word in an ayat.
+@functools.lru_cache(maxsize=16)
 def get_arabic_translation_pairs(surah_number: int,
                                  ayat_number: int) -> list[tuple[str, str]]:
     con = sqlite3.connect(INFORMATION_DB_PATH)
@@ -56,6 +61,8 @@ def get_arabic_translation_pairs(surah_number: int,
     return res
 
 
+# Returns (form, tag, features) tuples for every word in an ayat.
+@functools.lru_cache(maxsize=32)
 def get_word_morphology(surah_number: int, ayat_number: int,
                         word_number: int) -> list[tuple[str, str, str]]:
     con = sqlite3.connect(INFORMATION_DB_PATH)
@@ -71,6 +78,7 @@ def get_word_morphology(surah_number: int, ayat_number: int,
 
 
 # Returns link to lanes lexicon page (from lexicon.quranic-research.net).
+@functools.lru_cache(maxsize=32)
 def get_lanes_lexicon_link(lanes_root: str) -> str | None:
     con = sqlite3.connect(INFORMATION_DB_PATH)
     cur = con.cursor()
@@ -84,6 +92,8 @@ def get_lanes_lexicon_link(lanes_root: str) -> str | None:
     return res[0]
 
 
+# Returns link to corpus dictionary page (from corpus.quran.com).
+@functools.lru_cache(maxsize=32)
 def get_corpus_dictionary_link(corpus_root: str) -> str | None:
     con = sqlite3.connect(INFORMATION_DB_PATH)
     cur = con.cursor()
@@ -96,5 +106,8 @@ def get_corpus_dictionary_link(corpus_root: str) -> str | None:
 
     return res[0]
 
+
+# Returns link to corpus word morphology page (from corpus.quran.com).
+@functools.lru_cache(maxsize=32)
 def get_corpus_word_link(surah_number: int, ayat_number: int, word_number: int) -> str:
     return f"https://corpus.quran.com/wordmorphology.jsp?location={surah_number}:{ayat_number}:{word_number}"

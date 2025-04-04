@@ -27,6 +27,7 @@ def home():
     translation_pairs = get_arabic_translation_pairs(selected_surah_number, selected_ayat)
     words_data = []
     for i, (arabic, translation) in enumerate(translation_pairs, start=1):
+        # TODO: Optimize this. This runs for every word and does multiple database queries each time.
         link_dict = get_links(selected_surah_number, selected_ayat, i)
         words_data.append((arabic, translation, link_dict))
     
