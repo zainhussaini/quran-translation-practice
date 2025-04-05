@@ -136,16 +136,16 @@ def morphology():
 
         location, form, tag, features = line.split("\t")
         # An example location is (2:261:8:2).
-        surah_number, ayat_number, word_number, feature_number = [
+        surah_number, ayat_number, word_number, token_number = [
             int(x) for x in location[1:-1].split(":")
         ]
         data.append([
-            surah_number, ayat_number, word_number, feature_number, form, tag,
+            surah_number, ayat_number, word_number, token_number, form, tag,
             features
         ])
 
     write_to_table(table_name, [
-        "surah_number", "ayat_number", "word_number", "feature_number", "form",
+        "surah_number", "ayat_number", "word_number", "token_number", "form",
         "tag", "features"
     ], data)
 

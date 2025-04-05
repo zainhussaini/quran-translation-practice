@@ -68,7 +68,7 @@ def get_word_morphology(surah_number: int, ayat_number: int,
     con = sqlite3.connect(INFORMATION_DB_PATH)
     cur = con.cursor()
     cur.execute(
-        "SELECT form, tag, features FROM morphology WHERE surah_number = ? AND ayat_number = ? AND word_number = ? ORDER BY feature_number",
+        "SELECT form, tag, features FROM morphology WHERE surah_number = ? AND ayat_number = ? AND word_number = ? ORDER BY token_number",
         (surah_number, ayat_number, word_number))
     res = cur.fetchall()
     con.close()

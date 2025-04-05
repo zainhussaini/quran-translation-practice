@@ -58,11 +58,11 @@ class TestQuranText:
 
     def test_first_ayat(self):
         ayat_text = get_quran_text(1, 1)
-        assert ayat_text == "بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ"
+        assert ayat_text == "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
 
     def test_last_ayat(self):
         ayat_text = get_quran_text(114, 6)
-        assert ayat_text == "مِنَ ٱلْجِنَّةِ وَٱلنَّاسِ"
+        assert ayat_text == "مِنَ الْجِنَّةِ وَالنَّاسِ"
 
     def test_invalid_surah(self):
         with pytest.raises(Exception):
@@ -80,9 +80,9 @@ class TestArabicTranslationPairs:
         assert len(pairs) == 4
 
         assert pairs[0][0] == "بِسْمِ"
-        assert pairs[1][0] == "ٱللَّهِ"
-        assert pairs[2][0] == "ٱلرَّحْمَـٰنِ"
-        assert pairs[3][0] == "ٱلرَّحِيمِ"
+        assert pairs[1][0] == "اللَّهِ"
+        assert pairs[2][0] == "الرَّحْمَٰنِ"
+        assert pairs[3][0] == "الرَّحِيمِ"
 
         assert pairs[0][1] == "In (the) name"
         assert pairs[1][1] == "(of) Allah"
@@ -94,8 +94,8 @@ class TestArabicTranslationPairs:
         assert len(pairs) == 3
 
         assert pairs[0][0] == "مِنَ"
-        assert pairs[1][0] == "ٱلْجِنَّةِ"
-        assert pairs[2][0] == "وَٱلنَّاسِ"
+        assert pairs[1][0] == "الْجِنَّةِ"
+        assert pairs[2][0] == "وَالنَّاسِ"
 
         assert pairs[0][1] == "From"
         assert pairs[1][1] == "the jinn"

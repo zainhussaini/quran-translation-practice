@@ -2,7 +2,11 @@ from flask import Flask, render_template, request, jsonify
 from flaskr.data_reader import get_surah_names, get_ayat_count, get_quran_text, get_arabic_translation_pairs, get_word_morphology, get_lanes_lexicon_link, get_corpus_dictionary_link
 from flaskr.morphology_parser import get_links
 
+DEFAULT_SURAH_NUMBER = 2
+DEFAULT_AYAT_NUMBER = 255
+
 app = Flask(__name__)
+
 
 def get_next_surah_ayat(surah_number, ayat_number):
     if ayat_number < get_ayat_count(surah_number):
@@ -21,16 +25,17 @@ def home():
         selected_ayat = int(request.form.get('ayat'))
     else:
         # Show initial selection (first surah and first ayat)
-        selected_surah_number = 2
-        selected_ayat = 255
-        
-    translation_pairs = get_arabic_translation_pairs(selected_surah_number, selected_ayat)
+        selected_surah_number = DEFAULT_SURAH_NUMBER
+        selected_ayat = DEFAULT_AYAT_NUMBER
+
+    translation_pairs = get_arabic_translation_pairs(
+        selected_surah_number, selected_ayat)
     words_data = []
     for i, (arabic, translation) in enumerate(translation_pairs, start=1):
         # TODO: Optimize this. This runs for every word and does multiple database queries each time.
         link_dict = get_links(selected_surah_number, selected_ayat, i)
         words_data.append((arabic, translation, link_dict))
-    
+
     result = {
         'surah': selected_surah_number,
         'ayat': selected_ayat,
@@ -42,9 +47,9 @@ def home():
     ayat_numbers = list(range(1, get_ayat_count(selected_surah_number) + 1))
 
     return render_template("index.html",
-                         surah_names=get_surah_names(),
-                         ayat_numbers=ayat_numbers,
-                         result=result)
+                           surah_names=get_surah_names(),
+                           ayat_numbers=ayat_numbers,
+                           result=result)
 
 
 @app.route('/get_ayat_count/<int:surah_number>')
