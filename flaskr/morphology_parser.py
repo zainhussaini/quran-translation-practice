@@ -1,9 +1,5 @@
-from flaskr.data_reader import get_word_morphology, get_corpus_dictionary_link, get_corpus_word_link, get_lanes_lexicon_link
 from flaskr.root_fixer import convert_to_lanes_lexicon_root
 import re
-import sqlite3
-
-INFORMATION_DB_PATH = "information.db"
 
 
 # TODO: In a test, confirm that no word has more than one root.
@@ -22,10 +18,11 @@ def extract_root(morphology: list[tuple[str, str, str]]) -> str | None:
     return None
 
 
-def get_links(surah_number: int, ayat_number: int, word_number: int) -> dict[str, str | None]:
+def get_links(db, surah_number: int, ayat_number: int, word_number: int) -> dict[str, str | None]:
     """Determines helpful links for a word.
 
     Args:
+        db: A DatabaseReader instance.
         surah_number (int): The surah number.
         ayat_number (int): The ayat number.
         word_number (int): The word number.
@@ -36,21 +33,21 @@ def get_links(surah_number: int, ayat_number: int, word_number: int) -> dict[str
                                and values which are the links if they exist, otherwise None.
     """
     links_dict = {}
-    corpus_word_link = get_corpus_word_link(
+    corpus_word_link = db.get_corpus_word_link(
         surah_number, ayat_number, word_number)
     links_dict['corpus_word_link'] = corpus_word_link
     
-    morphology = get_word_morphology(surah_number, ayat_number, word_number)
+    morphology = db.get_word_morphology(surah_number, ayat_number, word_number)
     corpus_root = extract_root(morphology)
     if corpus_root is None:
         return links_dict
-    corpus_dictionary_link = get_corpus_dictionary_link(corpus_root)
+    corpus_dictionary_link = db.get_corpus_dictionary_link(corpus_root)
     links_dict['corpus_dictionary_link'] = corpus_dictionary_link
 
     lanes_root = convert_to_lanes_lexicon_root(corpus_root)
     if lanes_root is None:
         return links_dict
-    lanes_lexicon_link = get_lanes_lexicon_link(lanes_root)
+    lanes_lexicon_link = db.get_lanes_lexicon_link(lanes_root)
     links_dict['lanes_lexicon_link'] = lanes_lexicon_link
     return links_dict
 

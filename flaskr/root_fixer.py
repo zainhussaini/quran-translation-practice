@@ -37,8 +37,7 @@ def get_all_roots_from_lanes_lexicon() -> set[str]:
 
 # Returns a dictionary for special case mappings from corpus_root to lanes_root.
 # Whenever a corpus_root is in this dictionary, this should be used instead of
-# basic_convert_to_lanes_lexicon_root because
-# basic_convert_to_lanes_lexicon_root doesn't return a valid result.
+# basic_convert_to_lanes_lexicon_root because that doesn't return a valid result.
 @functools.cache
 def get_special_cases() -> dict[str, str | None]:
     with open(SPECIAL_CASES_FILE, "r") as file:
